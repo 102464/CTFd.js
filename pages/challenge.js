@@ -3,12 +3,12 @@ import { getScript } from "../utils/ajax";
 import { getChallenge } from "./challenges";
 
 // Challenge UI
-export async function displayChallenge(challengeId, renderChallenge) {
+export async function displayChallenge(competition_id, challengeId, renderChallenge) {
   // Clear out previous challenge data
   CTFd._internal.challenge = {};
 
   let config = CTFd.config;
-  let challenge = await getChallenge(challengeId);
+  let challenge = await getChallenge(competition_id, challengeId);
 
   // Call user func
   if (CTFd._functions.challenge.displayChallenge) {
@@ -33,14 +33,14 @@ export async function displayChallenge(challengeId, renderChallenge) {
   });
 }
 
-export async function submitChallenge(challengeId, challengeValue, preview = false) {
+export async function submitChallenge(competition_id, challengeId, challengeValue, preview = false) {
   // Call user func
   if (CTFd._functions.challenge.submitChallenge) {
     CTFd._functions.challenge.submitChallenge(challengeId, challengeValue);
     return;
   }
 
-  let url = `/api/v1/challenges/attempt`;
+  let url = `/api/v1/competitions/${competition_id}/challenges/attempt`;
   if (preview === true || CTFd.config.preview === true) {
     url += "?preview=true";
   }
@@ -105,16 +105,16 @@ export async function displayUnlock(hint) {
 }
 
 // Solves
-export async function loadSolves(challengeId) {
-  const response = await CTFd.fetch(`/api/v1/challenges/${challengeId}/solves`, {
+export async function loadSolves(competition_id, challengeId) {
+  const response = await CTFd.fetch(`/api/v1/competitions/${competition_id}/challenges/${challengeId}/solves`, {
     method: "GET",
   });
   const body = await response.json();
   return body["data"];
 }
 
-export async function displaySolves(challengeId) {
-  let solves = await loadSolves(challengeId);
+export async function displaySolves(competition_id, challengeId) {
+  let solves = await loadSolves(competition_id, challengeId);
 
   if (CTFd._functions.challenge.displaySolves) {
     CTFd._functions.challenge.displaySolves(solves);

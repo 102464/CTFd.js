@@ -1,7 +1,7 @@
 import CTFd from "../main";
 
-export async function getChallenges(query = {}) {
-  let url = "/api/v1/challenges";
+export async function getChallenges(competition_id, query = {}) {
+  let url = `/api/v1/competitions/${competition_id}/challenges`;
   if (Object.keys(query).length !== 0) {
     let qs = new URLSearchParams(query).toString();
     url = `${url}?${qs}`;
@@ -18,16 +18,16 @@ export async function getChallenges(query = {}) {
   return challenges;
 }
 
-export async function getChallenge(challengeId) {
-  const response = await CTFd.fetch(`/api/v1/challenges/${challengeId}`, {
+export async function getChallenge(competition_id, challengeId) {
+  const response = await CTFd.fetch(`/api/v1/competitions/${competition_id}/challenges/${challengeId}`, {
     method: "GET",
   });
   const body = await response.json();
   return body["data"];
 }
 
-export async function displayChallenges() {
-  let challenges = await getChallenges();
+export async function displayChallenges(competition_id) {
+  let challenges = await getChallenges(competition_id);
 
   // Call user func
   if (CTFd._functions.challenges.displayChallenges) {
