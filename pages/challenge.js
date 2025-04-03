@@ -40,7 +40,7 @@ export async function submitChallenge(competition_id, challengeId, challengeValu
     return;
   }
 
-  let url = `/api/v1/competitions/${competition_id}/challenges/attempt`;
+  let url = `/api/v1/competitions/${competition_id}/challenges/${challengeId}/attempt`;
   if (preview === true || CTFd.config.preview === true) {
     url += "?preview=true";
   }
